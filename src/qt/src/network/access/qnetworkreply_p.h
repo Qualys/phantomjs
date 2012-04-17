@@ -65,6 +65,9 @@ class QNetworkReplyPrivate: public QIODevicePrivate, public QNetworkHeadersPriva
 {
 public:
     QNetworkReplyPrivate();
+    QVariant total_connect;
+    QVariant dns_connect;
+    QVariant ssl_connect;
     QNetworkRequest request;
     QUrl url;
     QPointer<QNetworkAccessManager> manager;

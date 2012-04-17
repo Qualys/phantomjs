@@ -97,7 +97,9 @@ public:
 
     explicit QHttpNetworkReply(const QUrl &url = QUrl(), QObject *parent = 0);
     virtual ~QHttpNetworkReply();
-
+    QVariant total_connect;
+    QVariant dns_connect;
+    QVariant ssl_connect;
     QUrl url() const;
     void setUrl(const QUrl &url);
 

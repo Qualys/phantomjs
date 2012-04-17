@@ -61,6 +61,7 @@
 #include "qsslconfiguration_p.h"
 
 #include <QtCore/qstringlist.h>
+#include <QtCore/qelapsedtimer.h>
 
 #include <private/qringbuffer_p.h>
 
@@ -146,6 +147,12 @@ public:
 
     // The socket itself, including private slots.
     QTcpSocket *plainSocket;
+    QElapsedTimer *sslTimer;
+    QElapsedTimer *dnsTimer;
+    QElapsedTimer *totalTimer;
+    QVariant ssl_ssl_connect;
+    QVariant ssl_dns_connect;
+    QVariant ssl_total_connect;
     void createPlainSocket(QIODevice::OpenMode openMode);
     static void pauseSocketNotifiers(QSslSocket*);
     static void resumeSocketNotifiers(QSslSocket*);

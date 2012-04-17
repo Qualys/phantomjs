@@ -932,7 +932,9 @@ void QAbstractSocketPrivate::_q_startConnecting(const QHostInfo &hostInfo)
     // the write socket notifier after connect())
     state = QAbstractSocket::ConnectingState;
     emit q->stateChanged(state);
-
+    q->dns_connect = dnsTimer->elapsed();
+    totalTimer = new QElapsedTimer();
+    totalTimer->start();
     // Report the successful host lookup
     emit q->hostFound();
 
@@ -1210,7 +1212,7 @@ void QAbstractSocketPrivate::fetchConnectionParameters()
     state = QAbstractSocket::ConnectedState;
     emit q->stateChanged(state);
     emit q->connected();
-
+    q->total_connect = totalTimer->elapsed();
 #if defined(QABSTRACTSOCKET_DEBUG)
     qDebug("QAbstractSocketPrivate::fetchConnectionParameters() connection to %s:%i established",
            host.toString().toLatin1().constData(), port);
@@ -1351,6 +1353,9 @@ void QAbstractSocket::connectToHostImplementation(const QString &hostName, quint
                                                   OpenMode openMode)
 {
     Q_D(QAbstractSocket);
+    d->dnsTimer = new QElapsedTimer();
+    d->dnsTimer->start();
+
 #if defined(QABSTRACTSOCKET_DEBUG)
     qDebug("QAbstractSocket::connectToHost(\"%s\", %i, %i)...", qPrintable(hostName), port,
            (int) openMode);

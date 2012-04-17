@@ -55,12 +55,12 @@ function createHAR(address, title, startTime, resources)
             cache: {},
             timings: {
                 blocked: 0,
-                dns: -1,
-                connect: -1,
+                dns: endReply.dnsTime,
+                connect: endReply.connectTime,
                 send: 0,
                 wait: startReply.time - request.time,
                 receive: endReply.time - startReply.time,
-                ssl: -1
+                ssl: endReply.sslTime
             }
         });
     });

@@ -412,8 +412,21 @@ void QHttpNetworkConnectionChannel::_q_receiveReply()
                     replyPrivate->state = QHttpNetworkReplyPrivate::ReadingStatusState;
                     break; // ignore
                 }
-                if (replyPrivate->shouldEmitSignals())
+                if (replyPrivate->shouldEmitSignals()) {
+		    if(!ssl) {
+		        reply->total_connect = socket->total_connect;
+		        reply->dns_connect = socket->dns_connect;
+		    }
+		    else {
+		        QSslSocket *sslSocket = qobject_cast<QSslSocket*>(socket);
+		        if(sslSocket) {
+			    reply->ssl_connect = sslSocket->ssl_connect;
+			    reply->dns_connect = sslSocket->dns_connect;
+			    reply->total_connect = sslSocket->total_connect;
+		        }
+		    }
                     emit reply->headerChanged();
+		}
                 // After headerChanged had been emitted
                 // we can suddenly have a replyPrivate->userProvidedDownloadBuffer
                 // this is handled in the ReadingDataState however
@@ -1128,6 +1141,7 @@ void QHttpNetworkConnectionChannel::_q_encrypted()
 {
     if (!socket)
         return; // ### error
+
     state = QHttpNetworkConnectionChannel::IdleState;
     pendingEncrypt = false;
     if (!reply)

@@ -121,6 +121,12 @@ public:
     bool isRunning() const;
     QUrl url() const;
 
+    // timing funcs
+    QVariant connectTime();
+    QVariant dnsConnectTime();
+    QVariant sslConnectTime();
+
+
     // "cooked" headers
     QVariant header(QNetworkRequest::KnownHeaders header) const;
 

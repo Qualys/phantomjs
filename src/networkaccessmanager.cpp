@@ -207,6 +207,9 @@ void NetworkAccessManager::handleFinished(QNetworkReply *reply)
 
     QVariantMap data;
     data["stage"] = "end";
+    data["connectTime"] = reply->connectTime();
+    data["dnsTime"] = reply->dnsConnectTime();
+    data["sslTime"] = reply->sslConnectTime();
     data["id"] = m_ids.value(reply);
     data["url"] = reply->url().toEncoded().data();
     data["status"] = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);

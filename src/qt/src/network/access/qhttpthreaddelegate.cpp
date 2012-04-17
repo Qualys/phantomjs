@@ -486,13 +486,18 @@ void QHttpThreadDelegate::headerChangedSlot()
     incomingReasonPhrase = httpReply->reasonPhrase();
     isPipeliningUsed = httpReply->isPipeliningUsed();
     incomingContentLength = httpReply->contentLength();
-
+    total_connect = httpReply->total_connect;
+    dns_connect = httpReply->dns_connect;
+    ssl_connect = httpReply->ssl_connect;
     emit downloadMetaData(incomingHeaders,
                           incomingStatusCode,
                           incomingReasonPhrase,
                           isPipeliningUsed,
                           downloadBuffer,
-                          incomingContentLength);
+                          incomingContentLength,
+ 			  total_connect,
+			  dns_connect,
+			  ssl_connect);
 }
 
 void QHttpThreadDelegate::synchronousHeaderChangedSlot()

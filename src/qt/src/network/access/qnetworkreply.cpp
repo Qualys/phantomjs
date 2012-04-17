@@ -412,6 +412,29 @@ void QNetworkReply::setReadBufferSize(qint64 size)
     d->readBufferMaxSize = size;
 }
 
+QVariant QNetworkReply::connectTime()
+{
+    if(!d_func()->total_connect.isNull())
+      return d_func()->total_connect;
+    else
+      return -1;
+} 
+
+QVariant QNetworkReply::dnsConnectTime()
+{
+    if(!d_func()->dns_connect.isNull())
+      return d_func()->dns_connect;
+    else
+      return -1;
+}
+
+QVariant QNetworkReply::sslConnectTime()
+{
+    if(!d_func()->ssl_connect.isNull())
+      return d_func()->ssl_connect;
+    else
+      return -1;
+}
 /*!
     Returns the QNetworkAccessManager that was used to create this
     QNetworkReply object. Initially, it is also the parent object.

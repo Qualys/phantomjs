@@ -85,7 +85,9 @@ public:
     explicit QHttpThreadDelegate(QObject *parent = 0);
 
     ~QHttpThreadDelegate();
-
+    QVariant total_connect;
+    QVariant dns_connect;
+    QVariant ssl_connect;
     // incoming
     bool ssl;
 #ifndef QT_NO_OPENSSL
@@ -136,7 +138,7 @@ signals:
     void sslErrors(const QList<QSslError> &, bool *, QList<QSslError> *);
     void sslConfigurationChanged(const QSslConfiguration);
 #endif
-    void downloadMetaData(QList<QPair<QByteArray,QByteArray> >,int,QString,bool,QSharedPointer<char>,qint64);
+    void downloadMetaData(QList<QPair<QByteArray,QByteArray> >,int,QString,bool,QSharedPointer<char>,qint64,QVariant,QVariant,QVariant);
     void downloadProgress(qint64, qint64);
     void downloadData(QByteArray);
     void error(QNetworkReply::NetworkError, const QString);

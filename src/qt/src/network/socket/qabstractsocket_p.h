@@ -57,6 +57,7 @@
 #include "QtCore/qbytearray.h"
 #include "QtCore/qlist.h"
 #include "QtCore/qtimer.h"
+#include "QtCore/qelapsedtimer.h"
 #include "private/qringbuffer_p.h"
 #include "private/qiodevice_p.h"
 #include "private/qabstractsocketengine_p.h"
@@ -147,6 +148,9 @@ public:
 
     QTimer *connectTimer;
     QTimer *disconnectTimer;
+    QElapsedTimer *totalTimer;
+    QElapsedTimer *dnsTimer;
+    QElapsedTimer *sslTimer;
     int connectTimeElapsed;
 
     int hostLookupId;

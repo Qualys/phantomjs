@@ -1724,7 +1724,8 @@ void QSslSocket::connectToHostImplementation(const QString &hostName, quint16 po
     if (!d->initialized)
         d->init();
     d->initialized = false;
-
+    d->dnsTimer = new QElapsedTimer();
+    d->dnsTimer->start();
 #ifdef QSSLSOCKET_DEBUG
     qDebug() << "QSslSocket::connectToHostImplementation("
              << hostName << ',' << port << ',' << openMode << ')';
@@ -1846,6 +1847,9 @@ QSslSocketPrivate::QSslSocketPrivate()
     , readyReadEmittedPointer(0)
     , allowRootCertOnDemandLoading(true)
     , plainSocket(0)
+    , sslTimer(0)
+    , dnsTimer(0)
+    , totalTimer(0)
 {
     QSslConfigurationPrivate::deepCopyDefaultConfiguration(&configuration);
 }
@@ -2120,9 +2124,13 @@ void QSslSocketPrivate::_q_connectedSlot()
     qDebug() << "\tlocal =" << QHostInfo::fromName(q->localAddress().toString()).hostName()
              << q->localAddress() << q->localPort();
 #endif
+    ssl_total_connect = totalTimer->elapsed();
+    q->total_connect = ssl_total_connect;
     emit q->connected();
 
     if (autoStartHandshake) {
+	sslTimer = new QElapsedTimer();
+	sslTimer->start();	
         q->startClientEncryption();
     } else if (pendingClose) {
         pendingClose = false;
@@ -2140,6 +2148,10 @@ void QSslSocketPrivate::_q_hostFoundSlot()
     qDebug() << "QSslSocket::_q_hostFoundSlot()";
     qDebug() << "\tstate =" << q->state();
 #endif
+    ssl_dns_connect = dnsTimer->elapsed();
+    q->dns_connect = ssl_dns_connect;
+    totalTimer = new QElapsedTimer();
+    totalTimer->start();
     emit q->hostFound();
 }
 

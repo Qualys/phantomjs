@@ -1381,6 +1381,10 @@ bool QSslSocketBackendPrivate::startHandshake()
         plainSocket->setReadBufferSize(32768);
 
     connectionEncrypted = true;
+    if(sslTimer) {
+        ssl_ssl_connect = sslTimer->elapsed();
+	q->ssl_connect = ssl_ssl_connect;
+    }
     emit q->encrypted();
     if (autoStartHandshake && pendingClose) {
         pendingClose = false;

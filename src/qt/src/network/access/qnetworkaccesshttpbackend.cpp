@@ -566,8 +566,8 @@ void QNetworkAccessHttpBackend::postRequest()
         connect(delegate, SIGNAL(downloadFinished()),
                 this, SLOT(replyFinished()),
                 Qt::QueuedConnection);
-        connect(delegate, SIGNAL(downloadMetaData(QList<QPair<QByteArray,QByteArray> >,int,QString,bool,QSharedPointer<char>,qint64)),
-                this, SLOT(replyDownloadMetaData(QList<QPair<QByteArray,QByteArray> >,int,QString,bool,QSharedPointer<char>,qint64)),
+        connect(delegate, SIGNAL(downloadMetaData(QList<QPair<QByteArray,QByteArray> >,int,QString,bool,QSharedPointer<char>,qint64,QVariant,QVariant,QVariant)),
+                this, SLOT(replyDownloadMetaData(QList<QPair<QByteArray,QByteArray> >,int,QString,bool,QSharedPointer<char>,qint64,QVariant,QVariant,QVariant)),
                 Qt::QueuedConnection);
         connect(delegate, SIGNAL(downloadProgress(qint64,qint64)),
                 this, SLOT(replyDownloadProgressSlot(qint64,qint64)),
@@ -652,7 +652,10 @@ void QNetworkAccessHttpBackend::postRequest()
                      delegate->incomingReasonPhrase,
                      delegate->isPipeliningUsed,
                      QSharedPointer<char>(),
-                     delegate->incomingContentLength);
+                     delegate->incomingContentLength,
+		     delegate->total_connect,
+		     delegate->dns_connect,
+		     delegate->ssl_connect);
             replyDownloadData(delegate->synchronousDownloadData);
             httpError(delegate->incomingErrorCode, delegate->incomingErrorDetail);
         } else {
@@ -662,7 +665,11 @@ void QNetworkAccessHttpBackend::postRequest()
                      delegate->incomingReasonPhrase,
                      delegate->isPipeliningUsed,
                      QSharedPointer<char>(),
-                     delegate->incomingContentLength);
+                     delegate->incomingContentLength,
+		     delegate->total_connect,
+		     delegate->dns_connect,
+		     delegate->ssl_connect);
+
             replyDownloadData(delegate->synchronousDownloadData);
         }
 
@@ -760,10 +767,16 @@ void QNetworkAccessHttpBackend::replyDownloadMetaData
         (QList<QPair<QByteArray,QByteArray> > hm,
          int sc,QString rp,bool pu,
          QSharedPointer<char> db,
-         qint64 contentLength)
+         qint64 contentLength,
+	 QVariant tconnect,
+	 QVariant dconnect,
+	 QVariant sconnect)
 {
     statusCode = sc;
     reasonPhrase = rp;
+    reply->total_connect = tconnect;
+    reply->dns_connect = dconnect;
+    reply->ssl_connect = sconnect;
 
     // Download buffer
     if (!db.isNull()) {

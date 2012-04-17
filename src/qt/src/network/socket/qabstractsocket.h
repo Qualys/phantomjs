@@ -44,6 +44,7 @@
 
 #include <QtCore/qiodevice.h>
 #include <QtCore/qobject.h>
+#include <QtCore/qvariant.h>
 #ifndef QT_NO_DEBUG_STREAM
 #include <QtCore/qdebug.h>
 #endif
@@ -126,7 +127,6 @@ public:
 
     QAbstractSocket(SocketType socketType, QObject *parent);
     virtual ~QAbstractSocket();
-
     // ### Qt 5: Make connectToHost() and disconnectFromHost() virtual.
     void connectToHost(const QString &hostName, quint16 port, OpenMode mode = ReadWrite);
     void connectToHost(const QHostAddress &address, quint16 port, OpenMode mode = ReadWrite);
@@ -144,6 +144,9 @@ public:
     quint16 peerPort() const;
     QHostAddress peerAddress() const;
     QString peerName() const;
+
+    QVariant total_connect;
+    QVariant dns_connect;
 
     // ### Qt 5: Make setReadBufferSize() virtual
     qint64 readBufferSize() const;
