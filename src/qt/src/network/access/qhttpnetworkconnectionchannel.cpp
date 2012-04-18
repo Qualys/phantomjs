@@ -416,6 +416,8 @@ void QHttpNetworkConnectionChannel::_q_receiveReply()
 		    if(!ssl) {
 		        reply->total_connect = socket->total_connect;
 		        reply->dns_connect = socket->dns_connect;
+			socket->total_connect = 0;
+			socket->dns_connect = 0;
 		    }
 		    else {
 		        QSslSocket *sslSocket = qobject_cast<QSslSocket*>(socket);
@@ -423,6 +425,9 @@ void QHttpNetworkConnectionChannel::_q_receiveReply()
 			    reply->ssl_connect = sslSocket->ssl_connect;
 			    reply->dns_connect = sslSocket->dns_connect;
 			    reply->total_connect = sslSocket->total_connect;
+			    sslSocket->ssl_connect = 0;
+			    sslSocket->dns_connect = 0;
+			    sslSocket->total_connect = 0;
 		        }
 		    }
                     emit reply->headerChanged();
